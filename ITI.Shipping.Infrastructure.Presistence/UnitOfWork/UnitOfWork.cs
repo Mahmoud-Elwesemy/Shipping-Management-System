@@ -51,7 +51,7 @@ namespace ITI.Shipping.Infrastructure.Presistence.UnitOfWork
         public ISpecialCityCostRepository GetSpecialCityCostRepository()
         {
             // Check If The Repository Already Exists In The Dictionary Or Not
-            return (ISpecialCityCostRepository) _repositories.GetOrAdd(typeof(SpecialCityCost).Name,new SpecialCityCostRepository(_context));
+            return (ISpecialCityCostRepository) _repositories.GetOrAdd(typeof(SpecialCityCost).Name,new SpecialCityCostService(_context));
         }
         // This Method Is Used To Get The Order Repository
         public IOrderRepository GetOrderRepository()
@@ -66,7 +66,7 @@ namespace ITI.Shipping.Infrastructure.Presistence.UnitOfWork
             return (IWeightSettingRepository) _repositories.GetOrAdd(typeof(WeightSetting).Name,new WeightSettingRepository(_context));
         }
         // This Method Is Used To Get The Employee Repository
-        public IEmployeeRepository GetAllEmployeesAsync()
+        public IEmployeeRepository GetEmployeeRepository()
         {
             // Check If The Repository Already Exists In The Dictionary Or Not
             return (IEmployeeRepository) _repositories.GetOrAdd(typeof(ApplicationUser).Name,new EmployeeRepository(_context,_userManager));
@@ -78,9 +78,22 @@ namespace ITI.Shipping.Infrastructure.Presistence.UnitOfWork
             return (IOrderReportRepository) _repositories.GetOrAdd(typeof(OrderReport).Name,new OrderReportRepository(_context));
         }
         // This Method Is Used To Get The Merchant Repository
-        public IMerchantRepository GetAllMerchantAsync()
+        public IMerchantRepository GetMerchantRepository()
         {
+            // Check If The Repository Already Exists In The Dictionary Or Not
             return (IMerchantRepository) _repositories.GetOrAdd(typeof(ApplicationUser).Name,new MerchantRepository(_context,_userManager));
+        }
+        // This Method Is Used To Get The Branch Repository
+        public IBranchRepository GetBranchesRepository()
+        {
+             // Check If The Repository Already Exists In The Dictionary Or Not
+             return (IBranchRepository) _repositories.GetOrAdd(typeof(Branch).Name,new BranchRepository(_context));
+        }
+        // This Method Is Used To Get The Product Repository
+        public IProductRepository GetProductRepository()
+        {
+            // Check If The Repository Already Exists In The Dictionary Or Not
+            return (IProductRepository) _repositories.GetOrAdd(typeof(Product).Name,new ProductRepository(_context));
         }
     }
 }

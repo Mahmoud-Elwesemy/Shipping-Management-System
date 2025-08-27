@@ -1,10 +1,4 @@
-﻿using ITI.Shipping.Core.Domin.Entities;
-using ITI.Shipping.Core.Domin.Repositories.contract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ITI.Shipping.Core.Domin.Repositories.contract;
 namespace ITI.Shipping.Core.Domin.UnitOfWork.Contract
 {
     // This Is A Unit Of Work Interface That Contains The Repositories
@@ -20,7 +14,9 @@ namespace ITI.Shipping.Core.Domin.UnitOfWork.Contract
         IOrderReportRepository GetOrderReportRepository();
         Task<int> CompleteAsync();
         IWeightSettingRepository GetWeightSettingRepository();
-        IEmployeeRepository GetAllEmployeesAsync();
-        IMerchantRepository GetAllMerchantAsync();
+        IEmployeeRepository GetEmployeeRepository();
+        IMerchantRepository GetMerchantRepository();
+        IBranchRepository GetBranchesRepository();
+        IProductRepository GetProductRepository();
     }
 }

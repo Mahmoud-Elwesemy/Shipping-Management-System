@@ -12,5 +12,6 @@ namespace ITI.Shipping.Core.Application.Abstraction.Branch.Models
         public DateTime BranchDate { get; set; }=DateTime.Now;
         public bool IsDeleted { get; set; }=false;
         public int? RegionId { get; set; }
+        public int? CitySettingId { get; set; }
     }
 }

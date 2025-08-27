@@ -20,21 +20,27 @@ namespace ITI.Shipping.APIs.Controllers
             _serviceManager = serviceManager;
         }
         [HttpGet] // Get : /api/CitySetting
-        [HasPermission(Permissions.ViewCities)]
+        [HasPermission(Permissions.ViewCities,Permissions.AddMerchants,Permissions.UpdateMerchants
+        ,Permissions.AddOrders,Permissions.UpdateOrders,Permissions.AddBranches,Permissions.UpdateBranches,
+        Permissions.AddEmployees,Permissions.UpdateEmployees)]
         public async Task<ActionResult<IEnumerable<CitySettingDTO>>> GetCitySettings([FromQuery] Pramter pramter)
         {
             var CitySetting = await _serviceManager.CitySettingService.GetCitySettingsAsync(pramter);
             return Ok(CitySetting);
         }
         [HttpGet("CityByRegion")] // Get : /api/CitySetting/CityByRegion
-        [HasPermission(Permissions.ViewCities)]
+        [HasPermission(Permissions.ViewCities,Permissions.AddMerchants,Permissions.UpdateMerchants
+        ,Permissions.AddOrders,Permissions.UpdateOrders,Permissions.AddBranches,Permissions.UpdateBranches,
+         Permissions.AddEmployees,Permissions.UpdateEmployees)]
         public async Task<ActionResult<IEnumerable<CitySettingDTO>>> GetCityByGovernorateName(int regionId)
         {
             var CitySetting = await _serviceManager.CitySettingService.GetCityByGovernorateName(regionId);
             return Ok(CitySetting);
         }
         [HttpGet("{id}")] // Get : /api/CitySetting/id
-        [HasPermission(Permissions.ViewCities)]
+        [HasPermission(Permissions.ViewCities,Permissions.AddMerchants,Permissions.UpdateMerchants
+        ,Permissions.AddOrders,Permissions.UpdateOrders,Permissions.AddBranches,Permissions.UpdateBranches,
+        Permissions.AddEmployees,Permissions.UpdateEmployees)]
         public async Task<ActionResult<CitySettingDTO>> GetCitySetting(int id)
         {
             var CitySetting = await _serviceManager.CitySettingService.GetCitySettingAsync(id);

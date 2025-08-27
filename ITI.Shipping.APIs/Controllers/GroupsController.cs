@@ -14,14 +14,16 @@ public class GroupsController(IRoleService roleService):ControllerBase
     private readonly IRoleService _roleService = roleService;
 
     [HttpGet("")]
-    [HasPermission(Permissions.ViewPermissions)]
+    [HasPermission(Permissions.ViewPermissions,Permissions.AddOrders,Permissions.UpdateOrders,
+        Permissions.AddEmployees,Permissions.UpdateEmployees)]
     public async Task<IActionResult> GetAllGroups(CancellationToken cancellationToken)
     {
         var result = await _roleService.GetAllRolesAsync(cancellationToken);
         return Ok(result);
     }
     [HttpGet("{id}")]
-    [HasPermission(Permissions.ViewPermissions)]
+    [HasPermission(Permissions.ViewPermissions,Permissions.AddOrders,Permissions.UpdateOrders,
+        Permissions.AddEmployees,Permissions.UpdateEmployees)]
     public async Task<IActionResult> GetGroup(string id,CancellationToken cancellationToken)
     {
         var result = await _roleService.GetRoleByIdAsync(id,cancellationToken);
@@ -30,7 +32,7 @@ public class GroupsController(IRoleService roleService):ControllerBase
         return Ok(result);
     }
     [HttpPost("")]
-    [HasPermission(Permissions.AddPermissions)]
+    [HasPermission(Permissions.AddPermissions,Permissions.UpdatePermissions,Permissions.ViewPermissions)]
     public async Task<IActionResult> CreateGroup(CreateRoleRequestDTO createRoleRequestDTO,CancellationToken cancellationToken)
     {
         var result = await _roleService.CreateRoleAsync(createRoleRequestDTO,cancellationToken);

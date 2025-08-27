@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
 namespace ITI.Shipping.APIs.Filters;
-public class PermissionRequirements(string permission):IAuthorizationRequirement
+public class PermissionRequirements:IAuthorizationRequirement
 {
-    public string Permission { get; } = permission;
+    public PermissionRequirements(params string[] permissions)
+    {
+        Permissions = permissions;
+    }
+
+    public string[] Permissions { get; }
 }

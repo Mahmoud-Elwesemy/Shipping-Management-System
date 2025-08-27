@@ -19,6 +19,10 @@ namespace ITI.Shipping.Core.Domin.Entities
         [ForeignKey(nameof(Region))]
         public int? RegionId { get; set; }
         public virtual Region? Region { get; set; }
+        //----------- Obj From CitySetting and ForeignKey CitySettingId ---------------------------------
+        [ForeignKey(nameof(CitySetting))]
+        public int? CitySettingId { get; set; }
+        public virtual CitySetting? CitySetting { get; set; }
         //------------- ICollection From User ------------------------------
         public virtual ICollection<ApplicationUser> Users { get; set; } = [];
     }

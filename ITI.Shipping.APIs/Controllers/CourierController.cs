@@ -14,6 +14,22 @@ public class CourierController:ControllerBase
     {
         _serviceManager = serviceManager;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     [HttpGet("GetCouriersByBranch")]
     public async Task<ActionResult<IEnumerable<CourierDTO>>> GetCouriersByBranch([FromQuery] int branchId)
     {

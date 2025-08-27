@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿    using AutoMapper;
 using ITI.Shipping.Core.Application.Abstraction.Region;
 using ITI.Shipping.Core.Application.Abstraction.Region.Model;
 using ITI.Shipping.Core.Domin.Entities;

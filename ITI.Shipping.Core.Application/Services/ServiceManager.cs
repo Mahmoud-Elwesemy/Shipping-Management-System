@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ITI.Shipping.Core.Application.Abstraction;
+using ITI.Shipping.Core.Application.Abstraction.Auth;
 using ITI.Shipping.Core.Application.Abstraction.Branch;
 using ITI.Shipping.Core.Application.Abstraction.CitySetting;
 using ITI.Shipping.Core.Application.Abstraction.Courier;
@@ -31,6 +32,7 @@ using ITI.Shipping.Core.Application.Services.SpecialCityCostServices;
 using ITI.Shipping.Core.Application.Services.SpecialCourierRegionServices;
 using ITI.Shipping.Core.Application.Services.WeightSettingServices;
 using ITI.Shipping.Core.Domin.Entities;
+using ITI.Shipping.Core.Domin.Repositories.contract;
 using ITI.Shipping.Core.Domin.UnitOfWork.Contract;
 using ITI.Shipping.Infrastructure.Presistence.Data;
 using Microsoft.AspNetCore.Http;
@@ -65,7 +67,11 @@ namespace ITI.Shipping.Core.Application.Services
         private readonly Lazy<IDashboardService> _dashboardService;
         private readonly Lazy<IMerchantService> _merchantService;
 
-        public ServiceManager(IUnitOfWork unitOfWork , IMapper mapper , UserManager<ApplicationUser> userManager,IHttpContextAccessor httpContextAccessor,ApplicationContext Context)
+        public ServiceManager(IUnitOfWork unitOfWork , IMapper mapper ,
+            UserManager<ApplicationUser> userManager,IHttpContextAccessor httpContextAccessor,
+            ApplicationContext Context ,IRoleService roleService,
+            RoleManager<ApplicationRole> roleManager )
+           
         {
             // Initialize the services using Lazy<T> to defer their creation until they are accessed           
 
@@ -81,9 +87,9 @@ namespace ITI.Shipping.Core.Application.Services
             _productService = new Lazy<IProductService>(() => new ProductService(unitOfWork,mapper));
             _orderReportService = new Lazy<IOrderReportService>(()=> new OrderReportService(unitOfWork,mapper,userManager));
             _CourierService = new Lazy<ICourierService>(() => new CourierService(unitOfWork,mapper,userManager));
-            _employeeService = new Lazy<IEmployeeService>(() => new employeeService(unitOfWork,mapper));
+            _employeeService = new Lazy<IEmployeeService>(() => new employeeService(unitOfWork,mapper ,roleService,userManager,roleManager));
             _dashboardService = new Lazy<IDashboardService>(() => new DashboardService(Context));
-            _merchantService = new Lazy<IMerchantService>(() => new MerchantService(unitOfWork,mapper));
+            _merchantService = new Lazy<IMerchantService>(() => new MerchantService(unitOfWork,mapper,userManager));
         }
         // Properties to access the services
         public IBranchService BranchService => _branchService.Value;

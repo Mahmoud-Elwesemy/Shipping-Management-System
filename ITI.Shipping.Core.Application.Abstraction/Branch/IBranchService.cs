@@ -10,6 +10,8 @@ namespace ITI.Shipping.Core.Application.Abstraction.Branch
     public interface IBranchService
     {
         Task<IEnumerable<BranchDTO>> GetBranchesAsync ( Pramter pramter);
+        Task<IEnumerable<BranchDTO>> GetBranchesByRegionIdAsync(int regionId);
+        Task<IEnumerable<BranchDTO>> GetBranchesByCitySettingIdAsync(int citySettingId);
         Task<BranchDTO> GetBranchAsync(int id);
         Task AddAsync(BranchToAddDTO DTO);
         Task UpdateAsync(BranchToUpdateDTO DTO);

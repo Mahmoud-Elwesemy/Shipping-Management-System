@@ -15,12 +15,15 @@ namespace ITI.Shipping.Core.Application.Abstraction.Order
         Task<OrderWithProductsDto> GetOrderAsync(int id);
         Task<IEnumerable<OrderWithProductsDto>> GetOrdersByStatus(OrderStatus status,Pramter pramter);
         Task<IEnumerable<OrderWithProductsDto>> GetAllWatingOrder(Pramter pramter);
-         Task ChangeOrderStatus(int id,OrderStatus orderStatus);
+        Task ChangeOrderStatus(int id,OrderStatus orderStatus);
         Task ChangeOrderStatusToPending(int id);
         Task ChangeOrderStatusToDeclined(int id);
         Task AssignOrderToCourier (int OrderId,string courierId);
         Task AddAsync(addOrderDto DTO);
+        Task <updateOrderDto> GetOrderForEditAsync(int id);
         Task UpdateAsync(updateOrderDto DTO);
         Task DeleteAsync(int id);
+        Task<IEnumerable<OrderWithProductsDto>> GetOrdersByMerchantIdAsync(string merchantId, Pramter pramter);
+        Task<IEnumerable<OrderWithProductsDto>> GetOrdersByCourierAsync(string courierId, Pramter pramter);
     }
 }

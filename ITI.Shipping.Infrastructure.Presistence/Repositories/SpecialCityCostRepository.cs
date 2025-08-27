@@ -9,10 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 namespace ITI.Shipping.Infrastructure.Presistence.Repositories;
 // This Is A SpecialCityCost Repository Class That Implements The ISpecialCityCostRepository Interface
-public class SpecialCityCostRepository:GenericRepository<SpecialCityCost,int>, ISpecialCityCostRepository
+public class SpecialCityCostService:GenericRepository<SpecialCityCost,int>, ISpecialCityCostRepository
 {
     private readonly ApplicationContext _applicationContext;
-    public SpecialCityCostRepository(ApplicationContext applicationContext) : base(applicationContext)
+    public SpecialCityCostService(ApplicationContext applicationContext) : base(applicationContext)
     {
         _applicationContext = applicationContext;
     }
@@ -29,5 +29,14 @@ public class SpecialCityCostRepository:GenericRepository<SpecialCityCost,int>, I
         if(CityCostByMarchantId == null)
             return null!;
         return CityCostByMarchantId;
+    }
+
+    public async Task<IEnumerable<SpecialCityCost>> GetSpecialCityOfMerchant(string MerchatId)
+    {
+        var SpecialCityOfMerchant = await _applicationContext.SpecialCityCost.
+             Where(x => x.MerchantId == MerchatId).ToListAsync();
+        if(SpecialCityOfMerchant ==null)
+            return Enumerable.Empty<SpecialCityCost>();
+        return SpecialCityOfMerchant;
     }
 }

@@ -19,21 +19,21 @@ public class ShippingTypeController:ControllerBase
         _serviceManager = serviceManager;
     }
     [HttpGet] // Get : /api/ShippingType
-    [HasPermission(Permissions.ViewSettings)]
+    [HasPermission(Permissions.ViewShippingTypes,Permissions.AddOrders,Permissions.UpdateOrders)]
     public async Task<ActionResult<IEnumerable<ShippingTypeDTO>>> GetAllShippingType([FromQuery] Pramter pramter)
     {
         var allShippingType =await _serviceManager.shippingTypeService.GetAllShippingTypeAsync(pramter);
         return Ok(allShippingType);
     }
     [HttpGet("{id}")] // Get : /api/ShippingType/id
-    [HasPermission(Permissions.ViewSettings)]
+    [HasPermission(Permissions.ViewShippingTypes)]
     public async Task<ActionResult<ShippingTypeDTO>> GetShippingType(int id)
     {
         var ShippingType = await _serviceManager.shippingTypeService.GetShippingTypeAsync(id);
         return Ok(ShippingType);
     }
     [HttpPost] // Post : /api/ShippingType
-    [HasPermission(Permissions.AddSettings)]
+    [HasPermission(Permissions.AddShippingTypes)]
     public async Task<ActionResult<ShippingTypeDTO>> AddShippingType(ShippingTypeDTO DTO)
     {
         if(DTO == null)
@@ -42,7 +42,7 @@ public class ShippingTypeController:ControllerBase
         return Ok();
     }
     [HttpPut("{id}")] // Put : /api/ShippingType/id
-    [HasPermission(Permissions.UpdateSettings)]
+    [HasPermission(Permissions.UpdateShippingTypes)]
     public async Task<ActionResult<ShippingTypeDTO>> UpdateShippingType(int id,[FromBody] ShippingTypeDTO DTO)
     {
         if(DTO == null || id != DTO.Id)
@@ -58,7 +58,7 @@ public class ShippingTypeController:ControllerBase
         }
     }
     [HttpDelete("{id}")] // Delete : /api/ReShippingTypegion/id
-    [HasPermission(Permissions.DeleteSettings)]
+    [HasPermission(Permissions.DeleteShippingTypes)]
     public async Task<ActionResult> DeleteShippingType(int id)
     {
         try

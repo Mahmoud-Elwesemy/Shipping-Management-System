@@ -21,14 +21,36 @@ namespace ITI.Shipping.APIs.Controllers
         }
 
         [HttpGet()] // Get : /api/Branch
-        [HasPermission (Permissions.ViewBranches)]
+        [HasPermission (Permissions.ViewBranches,Permissions.AddCouriers,Permissions.UpdateCouriers,
+         Permissions.AddMerchants,Permissions.UpdateMerchants,Permissions.AddEmployees,
+         Permissions.UpdateEmployees,Permissions.AddOrders,Permissions.UpdateOrders)]
         public async Task<ActionResult<IEnumerable<BranchDTO>>> GetBranches([FromQuery] Pramter pramter)
         {
             var branches = await _serviceManager.BranchService.GetBranchesAsync(pramter);
             return Ok(branches);
         }
+        [HttpGet("GetBranchesByRegionId")] // Get : /api/GetBranchesByRegionId
+        [HasPermission(Permissions.ViewBranches,Permissions.AddCouriers,Permissions.UpdateCouriers,
+         Permissions.AddMerchants,Permissions.UpdateMerchants,Permissions.AddEmployees,
+         Permissions.UpdateEmployees,Permissions.AddOrders,Permissions.UpdateOrders)]
+        public async Task<ActionResult<IEnumerable<BranchDTO>>> GetBranchesByRegionId(int RegionId)
+        {
+            var branches = await _serviceManager.BranchService.GetBranchesByRegionIdAsync(RegionId);
+            return Ok(branches);
+        }
+        [HttpGet("GetBranchesByCitySettingId")] // Get : /api/GetBranchesByCitySettingId
+        [HasPermission(Permissions.ViewBranches,Permissions.AddCouriers,Permissions.UpdateCouriers,
+         Permissions.AddMerchants,Permissions.UpdateMerchants,Permissions.AddEmployees,
+         Permissions.UpdateEmployees,Permissions.AddOrders,Permissions.UpdateOrders)]
+        public async Task<ActionResult<IEnumerable<BranchDTO>>> GetBranchesByCitySettingId(int CitySettingId)
+        {
+            var branches = await _serviceManager.BranchService.GetBranchesByCitySettingIdAsync(CitySettingId);
+            return Ok(branches);
+        }
         [HttpGet("{id}")] // Get : /api/Branch/id
-        [HasPermission(Permissions.ViewBranches)]
+        [HasPermission(Permissions.ViewBranches,Permissions.AddCouriers,Permissions.UpdateCouriers,
+         Permissions.AddMerchants,Permissions.UpdateMerchants,Permissions.AddEmployees,
+         Permissions.UpdateEmployees,Permissions.AddOrders,Permissions.UpdateOrders)]
         public async Task<ActionResult<BranchDTO>> GetBranch(int id)
         {
             var branch = await _serviceManager.BranchService.GetBranchAsync(id);

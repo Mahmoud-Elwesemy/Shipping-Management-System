@@ -52,6 +52,7 @@ public static class ServiceContainer
         services.AddScoped<IRoleService,RoleService>();
         services.AddScoped<IUserService,UsersService>();
 
+
         return services;
     }
     private static IServiceCollection AuthenticationConfigurations(this IServiceCollection services)
@@ -60,8 +61,9 @@ public static class ServiceContainer
         services.AddIdentity<ApplicationUser,ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationContext>()
             .AddDefaultTokenProviders();
-        services.AddTransient<IAuthorizationHandler,PermissionAuthorizationHandler>();
-        services.AddTransient<IAuthorizationPolicyProvider,PermissionAuthorizationPolicyProvider>();
+        services.AddSingleton<IAuthorizationHandler,PermissionAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationPolicyProvider,PermissionAuthorizationPolicyProvider>();
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

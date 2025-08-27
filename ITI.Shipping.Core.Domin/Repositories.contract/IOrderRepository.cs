@@ -13,4 +13,6 @@ public interface IOrderRepository:IGenericRepository<Order,int>
     // This Is A Method That Get All Orders By pramter (Pagination , Order-Status)
     Task<IEnumerable<Order>> GetOrdersByStatus(OrderStatus status,Pramter pramter);
     Task<IEnumerable<Order>> GetAllWatingOrder(Pramter pramter);
+    Task<IEnumerable<Order>> GetOrderByMerchantId(string merchantId,Pramter pramter);
+    Task<IEnumerable<Order>> GetOrderByCourierId(string courierId, Pramter pramter);
 }

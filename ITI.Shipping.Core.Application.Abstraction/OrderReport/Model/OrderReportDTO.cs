@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using ITI.Shipping.Core.Domin.Entities_Helper;
 namespace ITI.Shipping.Core.Application.Abstraction.OrderReport.Model;
 public class OrderReportDTO
@@ -23,9 +16,11 @@ public record OrderReportToShowDTO
     public bool IsDeleted { get; set; }
     public string? MerchantName { get; set; }
     [JsonIgnore]
-    public string? MerchantId { get; set; }
+    public string? MerchantId { get; set; }  
+    public int? OrderId { get; set; }
     [JsonIgnore]
     public string? CourierId { get; set; }
+    public string? CourierName { get; set; }
     public string? CustomerName { get; set; }
     public string? CustomerPhone1 { get; set; }
     public string? RegionName { get; set; }

@@ -12,6 +12,7 @@ namespace ITI.Shipping.Core.Domin.Entities
         public string Name { get; set; } = string.Empty;
         public int Quantity { get; set; }
         public decimal Weight { get; set; }
+        public decimal Price { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         //----------- Obj From Order and ForeignKey OrderId ---------------------------------
         [ForeignKey("Order")]

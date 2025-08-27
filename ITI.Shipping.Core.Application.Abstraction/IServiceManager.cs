@@ -22,7 +22,7 @@ namespace ITI.Shipping.Core.Application.Abstraction
 {
     public interface IServiceManager
     {
-        // / Define all the services that the service manager will provide
+        //  Define all the services that the service manager will provide
         public IBranchService BranchService { get; }
         public ICitySettingService CitySettingService { get; }
         public ICourierReportService CourierReportService { get; }

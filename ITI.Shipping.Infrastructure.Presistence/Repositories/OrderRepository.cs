@@ -43,4 +43,40 @@ public class OrderRepository:GenericRepository<Order,int>, IOrderRepository
     {
         return await GetOrdersByStatus(OrderStatus.WaitingForConfirmation,pramter);
     }
+
+    public async Task<IEnumerable<Order>> GetOrderByMerchantId(string merchantId,Pramter pramter)
+    {
+        var orders = _Context.Orders
+            .Where(x => x.MerchantId == merchantId);
+        if(pramter.PageSize !=null && pramter.PageNumber != null)
+        {
+
+            return await orders
+                .Skip((pramter.PageNumber.Value - 1) * pramter.PageSize.Value)
+                .Take(pramter.PageSize.Value)
+                .ToListAsync();
+        }
+        else
+        {          
+             return await orders.ToListAsync();
+
+        }
+    }
+
+    public async Task<IEnumerable<Order>> GetOrderByCourierId(string courierId,Pramter pramter)
+    {
+        var orders = _Context.Orders.Where(x => x.CourierId == courierId);
+        if(pramter.PageSize != null && pramter.PageNumber != null)
+        {
+            return await orders
+                .Skip((pramter.PageNumber.Value - 1) * pramter.PageSize.Value)
+                .Take(pramter.PageSize.Value)
+                .ToListAsync();
+        }
+        else
+        {
+            return await orders.ToListAsync();
+        }
+
+    }
 }

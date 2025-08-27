@@ -39,7 +39,7 @@ public class OrderReportController:ControllerBase
 
     [HttpGet("{id}")] // Get : /api/OrderReport/id
     [HasPermission(Permissions.ViewOrderReports)]
-    public async Task<ActionResult<OrderReportDTO>> GetOrderReport(int id)
+    public async Task<ActionResult<OrderReportToShowDTO>> GetOrderReport(int id)
     {
         var OrderReport = await _serviceManager.orderReportService.GetOrderReportAsync(id);
         if(OrderReport == null)
@@ -48,15 +48,7 @@ public class OrderReportController:ControllerBase
         }
         return Ok(OrderReport);
     }
-    //[HttpPost] // Post : /api/OrderReport
-    //[HasPermission(Permissions.AddOrderReports)]
-    //public async Task<ActionResult<OrderReportDTO>> AddOrderReport(OrderReportDTO DTO)
-    //{
-    //    if(DTO == null)
-    //        return BadRequest("Invalid OrderReport data");
-    //    await _serviceManager.orderReportService.AddAsync(DTO);
-    //    return Ok();
-    //}
+    
     [HttpPut("{id}")] // Put : /api/OrderReport/id
     [HasPermission(Permissions.UpdateOrderReports)]
     public async Task<ActionResult> UpdateOrderReport(int id,[FromBody] OrderReportDTO DTO)

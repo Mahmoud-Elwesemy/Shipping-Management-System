@@ -30,13 +30,7 @@ namespace ITI.Shipping.Core.Domin.Entities_Helper
         public const string ViewMoneySafe = "MoneySafe:ViewMoneySafe";
         public const string AddMoneySafe = "MoneySafe:AddMoneySafe";
         public const string UpdateMoneySafe = "MoneySafe:UpdateMoneySafe";
-        public const string DeleteMoneySafe = "MoneySafe:DeleteMoneySafe";
-
-        // ----------- Branches ---------------------------------
-        public const string ViewBranches = "Branches:ViewBranches";
-        public const string AddBranches = "Branches:AddBranches";
-        public const string UpdateBranches = "Branches:UpdateBranches";
-        public const string DeleteBranches = "Branches:DeleteBranches";
+        public const string DeleteMoneySafe = "MoneySafe:DeleteMoneySafe"; 
 
         // ----------- Employees ---------------------------------
         public const string ViewEmployees = "Employees:ViewEmployees";
@@ -68,6 +62,12 @@ namespace ITI.Shipping.Core.Domin.Entities_Helper
         public const string UpdateCities = "Cities:UpdateCities";
         public const string DeleteCities = "Cities:DeleteCities";
 
+        // ----------- Branches ---------------------------------
+        public const string ViewBranches = "Branches:ViewBranches";
+        public const string AddBranches = "Branches:AddBranches";
+        public const string UpdateBranches = "Branches:UpdateBranches";
+        public const string DeleteBranches = "Branches:DeleteBranches";
+
         // ----------- Orders ---------------------------------
         public const string ViewOrders = "Orders:ViewOrders";
         public const string AddOrders = "Orders:AddOrders";
@@ -85,6 +85,12 @@ namespace ITI.Shipping.Core.Domin.Entities_Helper
         public const string AddAccounts = "Accounts:AddAccounts";
         public const string UpdateAccounts = "Accounts:UpdateAccounts";
         public const string DeleteAccounts = "Accounts:DeleteAccounts";
+
+        // ----------- ShippingTypes ---------------------------------
+        public const string ViewShippingTypes = "ShippingTypes:ViewShippingTypes";
+        public const string AddShippingTypes = "ShippingTypes:AddShippingTypes";
+        public const string UpdateShippingTypes = "ShippingTypes:UpdateShippingTypes";
+        public const string DeleteShippingTypes = "ShippingTypes:DeleteShippingTypes";
 
         public static IList<string?> GetAllPermissions() =>
         typeof(Permissions).GetFields().Select(f => f.GetValue(f) as string).ToList();

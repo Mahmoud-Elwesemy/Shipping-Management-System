@@ -19,14 +19,23 @@ public class ProductController:ControllerBase
         _serviceManager = serviceManager;
     }
     [HttpGet] // Get : /api/Product
-    [HasPermission(Permissions.ViewOrders)]
+    [HasPermission(Permissions.ViewOrders,Permissions.UpdateOrders)]
     public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts([FromQuery] Pramter pramter)
     {
         var Products = await _serviceManager.productService.GetProductsAsync(pramter);
         return Ok(Products);
     }
+    [HttpGet("GetProductsByOrderId/{orderId}")] // Get : /api/Product/GetProductsByOrderId/orderId
+    [HasPermission(Permissions.ViewOrders,Permissions.UpdateOrders)]
+    public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProductsByOrderId(int orderId)
+    {
+        var Products = await _serviceManager.productService.GetProductsByOrderIdAsync(orderId);
+        if(Products == null || !Products.Any())
+            return NotFound($"No products found for order with id {orderId}.");
+        return Ok(Products);
+    }
     [HttpGet("{id}")] // Get : /api/Product/id
-    [HasPermission(Permissions.ViewOrders)]
+    [HasPermission(Permissions.ViewOrders,Permissions.UpdateOrders)]
     public async Task<ActionResult<ProductDTO>> GetProduct(int id)
     {
         var Product = await _serviceManager.productService.GetProductAsync(id);
@@ -35,7 +44,7 @@ public class ProductController:ControllerBase
         return Ok(Product);
     }
     [HttpPost] // Post : /api/Product
-    [HasPermission(Permissions.AddOrders)]
+    [HasPermission(Permissions.AddOrders,Permissions.UpdateOrders)]
     public async Task<ActionResult<ProductDTO>> AddProduct(ProductDTO DTO)
     {
         if(DTO == null)

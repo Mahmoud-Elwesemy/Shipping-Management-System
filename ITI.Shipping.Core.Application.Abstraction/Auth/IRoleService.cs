@@ -12,4 +12,5 @@ public interface IRoleService
     Task<string> CreateRoleAsync(CreateRoleRequestDTO createRoleRequestDTO,CancellationToken cancellationToken = default);
     Task<string> UpdateRoleAsync(string roleId,CreateRoleRequestDTO createRoleRequestDTO,CancellationToken cancellationToken = default);
     Task<string> DeleteRoleAsync(string roleId,CancellationToken cancellationToken = default);
+    Task <RoleResponseDTO> GetRolyByEmployeeIdAsync(string employeeId, CancellationToken cancellationToken = default);
 }

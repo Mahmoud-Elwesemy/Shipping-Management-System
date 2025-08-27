@@ -12,7 +12,7 @@ namespace ITI.Shipping.Core.Application.Abstraction.OrderReport
     {
         //Task<IEnumerable<OrderReportToShowDTO>> GetAllOrderReportAsync(Pramter pramter);
         Task<IEnumerable<OrderReportToShowDTO>> GetAllOrderReportAsync(OrderReportPramter pramter);
-        Task<OrderReportDTO> GetOrderReportAsync(int id);
+        Task<OrderReportToShowDTO> GetOrderReportAsync(int id);
         Task AddAsync(OrderReportDTO DTO);
         Task UpdateAsync(OrderReportDTO DTO);
         Task DeleteAsync(int id);

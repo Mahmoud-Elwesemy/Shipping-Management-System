@@ -105,10 +105,42 @@ public class RoleService(RoleManager<ApplicationRole> roleManager,ApplicationCon
     {
         if(await _roleManager.FindByIdAsync(roleId) is not { } role)
             return "Role does not exists";
-        role.IsDeleted = true;
-        var result = await _roleManager.UpdateAsync(role);
+        var result = await _roleManager.DeleteAsync(role);
         if(!result.Succeeded)
             return "Failed to delete role";
         return "Group Deleted Successfully";
+        
+    }
+    // Get Role (Group) By Employee Id
+    public async Task<RoleResponseDTO> GetRolyByEmployeeIdAsync(string employeeId,CancellationToken cancellationToken = default)
+    {
+        var user = await _context.Users
+        .AsNoTracking()
+        .FirstOrDefaultAsync(e => e.Id == employeeId,cancellationToken);
+
+        if(user is null)
+            throw new Exception("Employee not found");
+
+        var userRole = await _context.UserRoles
+            .AsNoTracking()
+            .FirstOrDefaultAsync(ur => ur.UserId == employeeId,cancellationToken);
+
+        if(userRole is null)
+            throw new Exception("Role not found for this employee");
+
+        var role = await _roleManager.Roles
+            .AsNoTracking()
+            .Where(r => r.Id == userRole.RoleId && !r.IsDeleted)
+            .Select(r => new RoleResponseDTO(
+                r.Id,
+                r.Name!,
+                r.CreatedAt.ToShortDateString()
+            ))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if(role is null)
+            throw new Exception("Role not found or is deleted");
+
+        return role;
     }
 }

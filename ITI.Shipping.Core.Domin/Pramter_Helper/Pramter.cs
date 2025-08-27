@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace ITI.Shipping.Core.Domin.Pramter_Helper;
 public class Pramter
 {
-    private const int MaxPageSize = 10;
+    private const int MaxPageSize = 100;
     private int? pageSize ;
 
     public int? PageSize

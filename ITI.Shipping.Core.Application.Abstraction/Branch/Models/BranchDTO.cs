@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-namespace ITI.Shipping.Core.Application.Abstraction.Branch.Models
+﻿namespace ITI.Shipping.Core.Application.Abstraction.Branch.Models
 {
     public class BranchDTO
     {
@@ -17,6 +10,9 @@ namespace ITI.Shipping.Core.Application.Abstraction.Branch.Models
         //----------- Region ---------------------------------
         public int? RegionId { get; set; }
         public string? RegionName { get; set; }
+        //-----------  CitySetting ---------------------------------
+        public int? CitySettingId { get; set; }
+        public string? CityName { get; set; }
         //------------- List From User ------------------------------
         public List<string> UsersName { get; set; } = [];
     }

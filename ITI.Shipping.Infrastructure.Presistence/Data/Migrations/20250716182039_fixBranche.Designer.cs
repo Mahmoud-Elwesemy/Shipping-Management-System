@@ -4,6 +4,7 @@ using ITI.Shipping.Infrastructure.Presistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITI.Shipping.Infrastructure.Presistence.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250716182039_fixBranche")]
+    partial class fixBranche
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,7 +65,7 @@ namespace ITI.Shipping.Infrastructure.Presistence.Data.Migrations
                         {
                             Id = "01961d25-b4da-7184-a2a8-765486bd4857",
                             ConcurrencyStamp = "EAE00686-2608-4516-AD1B-F96CD87C475E",
-                            CreatedAt = new DateTime(2025, 7, 27, 4, 36, 12, 76, DateTimeKind.Local).AddTicks(3591),
+                            CreatedAt = new DateTime(2025, 7, 16, 21, 20, 37, 940, DateTimeKind.Local).AddTicks(9584),
                             IsDeleted = false,
                             Name = "Admin",
                             NormalizedName = "ADMIN"
@@ -71,7 +74,7 @@ namespace ITI.Shipping.Infrastructure.Presistence.Data.Migrations
                         {
                             Id = "01961d25-b4da-75a5-a1f4-a7aa10e421ed",
                             ConcurrencyStamp = "386C6E14-D0FD-40FF-80D0-74B419360EF0",
-                            CreatedAt = new DateTime(2025, 7, 27, 4, 36, 12, 76, DateTimeKind.Local).AddTicks(5203),
+                            CreatedAt = new DateTime(2025, 7, 16, 21, 20, 37, 941, DateTimeKind.Local).AddTicks(1212),
                             IsDeleted = false,
                             Name = "Courier",
                             NormalizedName = "COURIER"
@@ -80,7 +83,7 @@ namespace ITI.Shipping.Infrastructure.Presistence.Data.Migrations
                         {
                             Id = "01961d25-b4da-71e9-a488-1b8db232e984",
                             ConcurrencyStamp = "1420D50C-F54D-4503-88E8-A2EFA3BD7137",
-                            CreatedAt = new DateTime(2025, 7, 27, 4, 36, 12, 76, DateTimeKind.Local).AddTicks(5322),
+                            CreatedAt = new DateTime(2025, 7, 16, 21, 20, 37, 941, DateTimeKind.Local).AddTicks(1312),
                             IsDeleted = false,
                             Name = "Merchant",
                             NormalizedName = "MERCHANT"
@@ -204,7 +207,7 @@ namespace ITI.Shipping.Infrastructure.Presistence.Data.Migrations
                             Id = "0195d439-9ca1-7873-9c14-a4bc1c201593",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "0195d43b-a808-757b-9c3e-bf90c6091133",
-                            CreatedAt = new DateTime(2025, 7, 27, 4, 36, 12, 58, DateTimeKind.Local).AddTicks(5517),
+                            CreatedAt = new DateTime(2025, 7, 16, 21, 20, 37, 923, DateTimeKind.Local).AddTicks(163),
                             Email = "Weso430@gmail.com",
                             EmailConfirmed = false,
                             FullName = "Weso Admin",
@@ -212,7 +215,7 @@ namespace ITI.Shipping.Infrastructure.Presistence.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "WESO430@GMAIL.COM",
                             NormalizedUserName = "WESO430@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEZH94+fgMG3Tm4i1Dp2EtwPQYdc2MFuzV4KgA7pYHY2Cexnr4U/pE5Ijq24qWypRg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOK/PiEECzWmVLm8GEQc2kJOccnfgdI2xJfYIq85yNX0FpamL8aPirTYL2UYeMlfGg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "0195d43be3f271878cc37be7dfc34361",
                             TwoFactorEnabled = false,
@@ -459,9 +462,6 @@ namespace ITI.Shipping.Infrastructure.Presistence.Data.Migrations
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");

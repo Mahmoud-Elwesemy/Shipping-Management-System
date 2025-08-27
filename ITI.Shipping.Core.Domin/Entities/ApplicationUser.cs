@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using ITI.Shipping.Core.Domin.Entities_Helper;
 using Microsoft.AspNetCore.Identity;
-using ITI.Shipping.Core.Domin.Entities_Helper;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace ITI.Shipping.Core.Domin.Entities
 {
     public class ApplicationUser:IdentityUser
@@ -26,7 +20,7 @@ namespace ITI.Shipping.Core.Domin.Entities
         public string? StoreName { get; set; }
         public decimal? PickupPrice { get; set; }
         public decimal? CanceledOrder { get; set; }
-        //----------- Enum For Deduction-type For Employee -------------------------------  
+        //----------- Enum For Deduction-type For courier -------------------------------  
         public DeductionTypes? DeductionTypes { get; set; }
         public decimal? DeductionCompanyFromOrder { get; set; }
         //----------- Obj From Branch and ForeignKey BranchId ---------------------------------

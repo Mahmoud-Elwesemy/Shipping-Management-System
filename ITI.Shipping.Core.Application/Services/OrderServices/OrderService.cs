@@ -1,20 +1,14 @@
 ﻿using AutoMapper;
-using Castle.Core.Logging;
 using ITI.Shipping.Core.Application.Abstraction.Order;
 using ITI.Shipping.Core.Application.Abstraction.Order.Model;
 using ITI.Shipping.Core.Application.Abstraction.OrderReport.Model;
+using ITI.Shipping.Core.Application.Abstraction.Product.Model;
 using ITI.Shipping.Core.Domin.Entities;
 using ITI.Shipping.Core.Domin.Entities_Helper;
 using ITI.Shipping.Core.Domin.Pramter_Helper;
 using ITI.Shipping.Core.Domin.UnitOfWork.Contract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ITI.Shipping.Core.Application.Services.OrderServices
@@ -56,6 +50,7 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
             var ordersDto = await GetMerchantName(orders);
             return ordersDto;
         }
+        //--------------------------------------------------------------------------
         // Get order by id
         public async Task<OrderWithProductsDto> GetOrderAsync(int id)
         {
@@ -71,14 +66,25 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
             orderDto.MerchantName = MerchantName!.FullName;
             return orderDto;
         }
+        //--------------------------------------------------------------------------
         // Add new order And Calculate Shipping Cost And Create Order Report
         public async Task AddAsync(addOrderDto DTO)
         {
-
+            decimal recalculatedOrderCost = DTO.Products.Sum(p => p.Price * p.Quantity);
+            decimal recalculatedTotalWeight = DTO.Products.Sum(p => p.Weight * p.Quantity);         
+            if(Math.Abs(recalculatedOrderCost - DTO.OrderCost) > 0.01m)
+            {               
+                DTO.OrderCost = recalculatedOrderCost;
+            }
+            if(Math.Abs(recalculatedTotalWeight - DTO.TotalWeight) > 0.01m)
+            {
+                DTO.TotalWeight = recalculatedTotalWeight;
+            }
             decimal ShippingCost = 0;
-            decimal Ordercost = DTO.OrderCost;
-            decimal Totalweight = DTO.TotalWeight;
+
+           
             var IsOutOfCityShipping = DTO.IsOutOfCityShipping;
+
 
             var city = await _unitOfWork.GetRepository<CitySetting,int>().GetByIdAsync(DTO.City);
             var pickupShippingCost = city!.pickupShippingCost;
@@ -90,53 +96,20 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
             decimal CostPerKG = weightsetting!.CostPerKg;
 
             var SpecialCityCost = await _unitOfWork.GetSpecialCityCostRepository()
-                .GetCityCostByMarchantId(DTO.MerchantName , DTO.City);
+                .GetCityCostByMarchantId(DTO.merchantId , DTO.City);
 
-            //if(SpecialCityCost != null )
-            //{
-            //    if(Totalweight > 0 && Totalweight <= MaxWeight)
-            //    {
-            //        ShippingCost += SpecialCityCost.Price;
-            //    }
-            //    else if(Totalweight > MaxWeight)
-            //    {
-            //        decimal ExcessWeight = Totalweight - MaxWeight;
-            //        ShippingCost += SpecialCityCost.Price + (ExcessWeight * CostPerKG);
-            //    }
-
-            //   if(IsOutOfCityShipping == true)
-            //    {
-            //        ShippingCost = ShippingCost*1.1m;
-            //    }
-            //}
-            //else
-            //{
-            //    if (Totalweight > 0 && Totalweight <= MaxWeight)
-            //    {
-            //        ShippingCost += standardShippingCost;
-            //    }
-            //    else if (Totalweight > MaxWeight)
-            //    {
-            //        decimal ExcessWeight = Totalweight - MaxWeight;
-            //        ShippingCost += standardShippingCost + (ExcessWeight * CostPerKG);
-            //    }
-
-            //    if(IsOutOfCityShipping == true)
-            //    {
-            //        ShippingCost = ShippingCost * 1.1m;
-            //    }
-            //}
+            
             if(SpecialCityCost != null)
             {
-                if(Totalweight > 0 && Totalweight <= MaxWeight)
+                if(DTO.TotalWeight > 0 && DTO.TotalWeight <= MaxWeight)
                 {
                     if(IsOutOfCityShipping == true)
                         ShippingCost += SpecialCityCost.Price * 1.1m;
                     ShippingCost += SpecialCityCost.Price;
                 }
-                else if(Totalweight > MaxWeight)
+                else if(DTO.TotalWeight > MaxWeight)
                 {
-                    decimal ExcessWeight = Totalweight - MaxWeight;
+                    decimal ExcessWeight = DTO.TotalWeight - MaxWeight;
                     if(IsOutOfCityShipping == true)
                         ShippingCost += SpecialCityCost.Price * 1.1m + (ExcessWeight * CostPerKG);
                     ShippingCost += SpecialCityCost.Price + (ExcessWeight * CostPerKG);
@@ -144,15 +117,15 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
             }
             else
             {
-                if(Totalweight > 0 && Totalweight <= MaxWeight)
+                if(DTO.TotalWeight > 0 && DTO.TotalWeight <= MaxWeight)
                 {
                     if(IsOutOfCityShipping == true)
                         ShippingCost += standardShippingCost * 1.1m;
                     ShippingCost += standardShippingCost;
                 }
-                else if(Totalweight > MaxWeight)
+                else if(DTO.TotalWeight > MaxWeight)
                 {
-                    decimal ExcessWeight = Totalweight - MaxWeight;
+                    decimal ExcessWeight = DTO.TotalWeight - MaxWeight;
                     if(IsOutOfCityShipping == true)
                         ShippingCost += standardShippingCost * 1.1m + (ExcessWeight * CostPerKG);
                     ShippingCost += standardShippingCost + (ExcessWeight * CostPerKG);
@@ -164,12 +137,13 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
             {
                 ShippingCost += ShippingType.BaseCost;
             }
-            DTO.ShippingCost = ShippingCost;
+            DTO.ShippingCost = ShippingCost;           
+            
             var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext!.User);
             if(currentUser != null && await _userManager.IsInRoleAsync(currentUser,DefaultRole.Merchant))
             {
                 DTO.status = OrderStatus.WaitingForConfirmation;
-                DTO.MerchantName = currentUser.Id;
+                DTO.merchantId = currentUser.Id;
 
             }
             else
@@ -193,9 +167,53 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
             await _unitOfWork.GetOrderReportRepository().AddAsync(_mapper.Map<OrderReport>(orderReportDto));
             await _unitOfWork.CompleteAsync();    
         }
+        //--------------------------------------------------------------------------
+        // Get order for edit
+        public async Task<updateOrderDto> GetOrderForEditAsync(int id)
+        {
+            var order = await _unitOfWork.GetOrderRepository().GetByIdAsync(id);
+            
+
+            if(order == null || order.IsDeleted)
+                throw new KeyNotFoundException($"Order with ID {id} not found.");
+            var MerchantNameOfOrder = await _userManager.FindByIdAsync(order.MerchantId);
+            return new updateOrderDto
+            {
+                Id = order.Id,
+                OrderTypes = order.OrderTypes,
+                IsOutOfCityShipping = order.IsOutOfCityShipping,
+                ShippingId = (int) order.ShippingTypeId,
+                PaymentType = order.PaymentType,
+                Branch = (int) order.BranchId, 
+                Region = (int) order.RegionId, 
+                City = (int) order.CitySettingId,     
+                TotalWeight = order.TotalWeight,
+                merchantId = char.IsDigit(order.MerchantId[0])
+                    ? MerchantNameOfOrder?.FullName ?? "اسم غير معروف"
+                    : order.MerchantId,
+                OrderCost = order.OrderCost,
+                CustomerName = order.CustomerName,
+                CustomerPhone1 = order.CustomerPhone1,
+                CustomerAddress = order.CustomerAddress,
+                CustomerEmail = order.CustomerEmail,
+                Products = _mapper.Map<List<ProductDTO>>(order.Products)
+            };
+        }
+        //--------------------------------------------------------------------------
         // Update order
         public async Task UpdateAsync(updateOrderDto DTO)
         {
+            decimal recalculatedOrderCost = DTO.Products.Sum(p => p.Price * p.Quantity);
+            decimal recalculatedTotalWeight = DTO.Products.Sum(p => p.Weight * p.Quantity);
+            if(Math.Abs(recalculatedOrderCost - DTO.OrderCost) > 0.01m)
+            {
+                DTO.OrderCost = recalculatedOrderCost;
+            }
+            if(Math.Abs(recalculatedTotalWeight - DTO.TotalWeight) > 0.01m)
+            {
+                DTO.TotalWeight = recalculatedTotalWeight;
+            }
+
             var OrderRepo = _unitOfWork.GetOrderRepository();
             var existingOrder = await OrderRepo.GetByIdAsync(DTO.Id);
             if(existingOrder == null)
@@ -204,6 +222,7 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
             OrderRepo.UpdateAsync(existingOrder);
             await _unitOfWork.CompleteAsync();
         }
+        //--------------------------------------------------------------------------
         // Delete order
         public async Task DeleteAsync(int id)
         {
@@ -215,6 +234,7 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
             await _unitOfWork.CompleteAsync();
            
         }
+        //--------------------------------------------------------------------------
         // Get all orders by status
         public async Task<IEnumerable<OrderWithProductsDto>> GetOrdersByStatus(OrderStatus status,Pramter pramter)
         {
@@ -223,6 +243,7 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
             var ordersDto = await GetMerchantName(orders);
             return ordersDto;
         }
+        //--------------------------------------------------------------------------
         //  Get all waiting orders
         public async Task<IEnumerable<OrderWithProductsDto>> GetAllWatingOrder(Pramter pramter)
         {
@@ -230,16 +251,19 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
             var WatingordersDto = await GetMerchantName(WatingOrder);
             return WatingordersDto;
         }
+        //--------------------------------------------------------------------------
         // Change order status to pending
         public async Task ChangeOrderStatusToPending(int id)
         {
             await ChangeOrderStatus(id,OrderStatus.Pending);
         }
+        //--------------------------------------------------------------------------
         // Change order status to Declined
         public async Task ChangeOrderStatusToDeclined(int id)
         {
             await ChangeOrderStatus(id,OrderStatus.Declined);
         }
+        //--------------------------------------------------------------------------
         // Change order status
         public async Task ChangeOrderStatus(int id , OrderStatus orderStatus)
         {
@@ -248,6 +272,7 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
                 _unitOfWork.GetOrderRepository().UpdateAsync(Order);
                 await _unitOfWork.CompleteAsync();
         }
+        //--------------------------------------------------------------------------
         // Assign order to courier
         public async Task AssignOrderToCourier(int OrderId,string courierId)
         {
@@ -268,6 +293,41 @@ namespace ITI.Shipping.Core.Application.Services.OrderServices
             await _unitOfWork.CompleteAsync();
         }
 
-       
+        //--------------------------------------------------------------------------
+        public async Task<IEnumerable<OrderWithProductsDto>> GetOrdersByMerchantIdAsync(string merchantId,Pramter pramter)
+        {
+            var Merchant =await _userManager.FindByIdAsync(merchantId);
+            if(Merchant == null)
+            {
+                throw new KeyNotFoundException($"Merchant with ID {merchantId} not found.");
+            }
+            var orders =await _unitOfWork.GetOrderRepository().GetOrderByMerchantId(merchantId, pramter);
+            if(orders == null)
+            {
+                throw new KeyNotFoundException($"No orders found for Merchant with ID {merchantId}.");
+            }
+            var ordersDto = _mapper.Map<IEnumerable<OrderWithProductsDto>>(orders);
+            return ordersDto;
+
+
+
+        }
+        //--------------------------------------------------------------------------
+
+        public async Task<IEnumerable<OrderWithProductsDto>> GetOrdersByCourierAsync(string courierId,Pramter pramter)
+        {
+            var Courier = await _userManager.FindByIdAsync(courierId);
+            if(Courier == null)
+            {
+                throw new KeyNotFoundException($"Courier with ID {courierId} not found.");
+            }
+            var orders = await _unitOfWork.GetOrderRepository().GetOrderByCourierId(courierId,pramter);
+            if(orders == null)
+            {
+                throw new KeyNotFoundException($"No orders found for Courier with ID {courierId}.");
+            }
+            var ordersDto = _mapper.Map<IEnumerable<OrderWithProductsDto>>(orders);
+            return ordersDto;
+        }
     }
 }

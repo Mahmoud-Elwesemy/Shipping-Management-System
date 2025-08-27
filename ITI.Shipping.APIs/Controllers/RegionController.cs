@@ -21,14 +21,22 @@ namespace ITI.Shipping.APIs.Controllers
             _serviceManager = serviceManager;
         }
         [HttpGet] // Get : /api/Region
-        [HasPermission(Permissions.ViewRegions)]
+        [HasPermission(Permissions.ViewRegions,Permissions.AddCouriers,Permissions.UpdateCouriers,
+         Permissions.AddMerchants,Permissions.UpdateMerchants,Permissions.AddEmployees,
+         Permissions.UpdateEmployees,Permissions.AddCities,Permissions.UpdateCities,Permissions.ViewCities,
+            Permissions.AddOrders,
+         Permissions.ViewOrders,Permissions.UpdateOrders,Permissions.AddBranches,Permissions.UpdateBranches)]
         public async Task <ActionResult<IEnumerable<RegionDto>>> GetAllRegion([FromQuery] Pramter pramter)
         {
             var regions = await _serviceManager.RegionService.GetRegionsAsync(pramter);
             return Ok(regions);
         }
         [HttpGet("{id}")] // Get : /api/Region/id
-        [HasPermission(Permissions.ViewRegions)]
+        [HasPermission(Permissions.ViewRegions,Permissions.AddCouriers,Permissions.UpdateCouriers,
+         Permissions.AddMerchants,Permissions.UpdateMerchants,Permissions.AddEmployees,
+         Permissions.UpdateEmployees,Permissions.AddCities,Permissions.UpdateCities,Permissions.ViewCities,
+         Permissions.AddOrders, Permissions.ViewOrders,
+         Permissions.UpdateOrders,Permissions.AddBranches,Permissions.UpdateBranches)]
         public async Task <ActionResult<RegionDto>> GetRegion(int id)
         {
             var region = await _serviceManager.RegionService.GetRegionAsync(id);

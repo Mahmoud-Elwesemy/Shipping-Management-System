@@ -34,13 +34,13 @@ namespace ITI.Shipping.Core.Application.Abstraction.Order.Model
         public bool IsOutOfCityShipping { get; set; }
         public int ShippingId { get; set; }
         public PaymentType? PaymentType { get; set; }
-        public new int? Branch { get; set; }
-        public new int? Region { get; set; }
+        public  int Branch { get; set; }
+        public  int Region { get; set; }
         [JsonIgnore]
         public  decimal ShippingCost { get; set; }
-        public new int City { get; set; }
+        public  int City { get; set; }
         public decimal TotalWeight { get; set; }
-        public string MerchantName { get; set; }
+        public string merchantId { get; set; } = string.Empty;
 
         [Range(0.01,double.MaxValue,ErrorMessage = "Order cost must be greater than zero")]
         public decimal OrderCost { get; set; }

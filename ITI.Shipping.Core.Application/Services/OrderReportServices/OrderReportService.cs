@@ -1,19 +1,10 @@
 ﻿using AutoMapper;
-using ITI.Shipping.Core.Application.Abstraction.Order;
-using ITI.Shipping.Core.Application.Abstraction.Order.Model;
 using ITI.Shipping.Core.Application.Abstraction.OrderReport;
 using ITI.Shipping.Core.Application.Abstraction.OrderReport.Model;
 using ITI.Shipping.Core.Domin.Entities;
 using ITI.Shipping.Core.Domin.Pramter_Helper;
 using ITI.Shipping.Core.Domin.UnitOfWork.Contract;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITI.Shipping.Core.Application.Services.OrderReportServices
 {
@@ -37,6 +28,7 @@ namespace ITI.Shipping.Core.Application.Services.OrderReportServices
             {
                 var MerchantName = await _userManager.FindByIdAsync(orderreport.MerchantId!);
                 var Courier = await _userManager.FindByIdAsync(orderreport.CourierId!);
+                orderreport.CourierName = Courier?.FullName ?? "Unknown";
                 orderreport.MerchantName = MerchantName?.FullName ?? "Unknown";
                 orderreport.CompanyValue = Courier?.DeductionCompanyFromOrder ?? 0;
                 switch(orderreport.PaymentType)
@@ -61,6 +53,35 @@ namespace ITI.Shipping.Core.Application.Services.OrderReportServices
             }
             return orderreportsDto;
         }
+        private async Task<OrderReportToShowDTO> GetMerchantNameAndCourierNameAndAmountReceivedAndShippingCostPaid (OrderReport orderreports)
+        {
+            var orderreportsDto = _mapper.Map<OrderReportToShowDTO>(orderreports);
+            var MerchantName = await _userManager.FindByIdAsync(orderreportsDto.MerchantId!);
+            var Courier = await _userManager.FindByIdAsync(orderreportsDto.CourierId!);
+            orderreportsDto.CourierName = Courier?.FullName ?? "Unknown";
+            orderreportsDto.MerchantName = MerchantName?.FullName ?? "Unknown";
+            orderreportsDto.CompanyValue = Courier?.DeductionCompanyFromOrder ?? 0;
+            switch(orderreportsDto.PaymentType)
+            {
+                case "Collectible":
+                    orderreportsDto.AmountReceived = orderreportsDto.ShippingCost + orderreportsDto.OrderCost;
+                    orderreportsDto.ShippingCostPaid = 0;
+                    break;
+                case "Prepaid":
+                    orderreportsDto.AmountReceived = 00;
+                    orderreportsDto.ShippingCostPaid = orderreportsDto.ShippingCost;
+                    break;
+                case "Expulsion":
+                    orderreportsDto.AmountReceived = orderreportsDto.ShippingCost;
+                    orderreportsDto.ShippingCostPaid = 0;
+                    break;
+                default:
+                    orderreportsDto.AmountReceived = 0;
+                    orderreportsDto.ShippingCostPaid = 0;
+                    break;
+            }
+            return orderreportsDto;
+        }
         //------------------------------------------------------------------------------
         // Get All Order Report
         //public async Task<IEnumerable<OrderReportToShowDTO>> GetAllOrderReportAsync(Pramter pramter)
@@ -79,9 +100,13 @@ namespace ITI.Shipping.Core.Application.Services.OrderReportServices
             return orderreportsDto;
         }
         // Get Order Report By Id
-        public async Task<OrderReportDTO> GetOrderReportAsync(int id)
+        public async Task<OrderReportToShowDTO> GetOrderReportAsync(int id)
         {
-            return _mapper.Map<OrderReportDTO>(await _unitOfWork.GetOrderReportRepository().GetByIdAsync(id));
+            var orderreport = await _unitOfWork.GetOrderReportRepository().GetByIdAsync(id);
+            if(orderreport == null)
+                throw new KeyNotFoundException($"OrderReport with ID {id} not found.");
+            var orderreportDto = await GetMerchantNameAndCourierNameAndAmountReceivedAndShippingCostPaid(orderreport);
+            return orderreportDto;
         }
         // Add Order Report
         public async Task AddAsync(OrderReportDTO DTO)

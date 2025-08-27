@@ -19,6 +19,8 @@ namespace ITI.Shipping.Core.Domin.Entities
         [ForeignKey(nameof(Region))]
         public int? RegionId { get; set; }
         public virtual Region? Region { get; set; }
+        //------------- ICollection From Branch ------------------------------
+        public virtual ICollection<Branch> Branches { get; set; } = [];
         //------------- ICollection From Order ------------------------------
         public virtual ICollection<Order> Orders { get; set; } = [];
         //------------- ICollection From SpecialPickup ------------------------------
